@@ -37,7 +37,8 @@ export class OpenWallet extends Component {
     const ks = lightwallet.keystore.deserialize(ksDump);
     console.log(ks)
     console.log(this.props)
-    //Utils.checkKeystore(ks, this.props.STPupdateKeystore)
+    //this.props.location.name contains the cb function
+    Utils.checkKeystore(true, this.props.location.name)
   }
 
   updatePass(event) {
@@ -50,6 +51,12 @@ export class OpenWallet extends Component {
     event.preventDefault()
       //console.log(this.props)
       this.props.history.goBack();
+  }
+
+  componentDidMount() {
+    console.log(this.props.location.name)
+    const { match } = this.props
+    console.log(match)
   }
     render() {
         return (
@@ -79,11 +86,9 @@ export class OpenWallet extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    username: state.reducers.username,
+const mapStateToProps = (state, ownProps) => ({
     keystore: state.reducers.keystore,
 })
-
 
 export default
   withRouter(
