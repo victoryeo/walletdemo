@@ -21,12 +21,14 @@ class AddWalletButton extends Component {
   onOpenWalletB(event) {
     console.log('click onOpenWalletB')
     event.preventDefault()
-    this.props.history.push('/openwallet')
-    this.props.STPupdateKeystore(true)
+    this.props.history.push({
+           pathname: '/openwallet',
+           name: this.props.STPupdateKeystore,
+       })
+    //this.props.STPupdateKeystore(true)
   }
 
     render() {
-
         return (
             <div>
             <p>
