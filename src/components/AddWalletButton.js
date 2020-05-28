@@ -2,8 +2,16 @@ import React, {Component} from 'react'
 //import FirstStore from "./FirstStore"
 import {connect} from "react-redux"
 import Button from 'react-bootstrap/Button'
+import { STPupdateKeystore } from '../actions/actions.js'
+import { compose } from 'redux'
+import { withRouter } from 'react-router-dom';
 
 class AddWalletButton extends Component {
+  constructor(props) {
+    super(props)
+    console.log(this.props)
+  }
+
   onAddWalletB(event) {
     console.log('click onAddWalletB')
     event.preventDefault()
@@ -13,10 +21,12 @@ class AddWalletButton extends Component {
   onOpenWalletB(event) {
     console.log('click onOpenWalletB')
     event.preventDefault()
-    window.open("/openwallet")
+    this.props.history.push('/openwallet')
+    this.props.STPupdateKeystore(true)
   }
 
     render() {
+
         return (
             <div>
             <p>
@@ -34,9 +44,17 @@ class AddWalletButton extends Component {
 }
 
 const mapStateToProps = state => ({
-
-        username: state.reducers.username,
-
+    username: state.reducers.username,
+    keystore: state.reducers.keystore,
 })
 
-export default connect(mapStateToProps)(AddWalletButton)
+
+export default compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+    {
+      STPupdateKeystore,
+    }
+  )
+)(AddWalletButton)
