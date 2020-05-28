@@ -1,11 +1,14 @@
 import React, {Component} from 'react'
-//import FirstStore from "./FirstStore"
 import {connect} from "react-redux"
 import Button from 'react-bootstrap/Button'
 //import keyStore from  '../containers/keystore'
 import lightwallet from 'eth-lightwallet'
+import localStore from 'store/dist/store.modern'
 
+/* Default HD path string for key generation from seed */
 const hdPathString = `m/44'/60'/0'/0`
+/* keystore will be saved to local storage under this key */
+export const localStorageKey = 'ks';
 
 export class AddWallet extends Component {
   constructor(props) {
@@ -15,6 +18,7 @@ export class AddWallet extends Component {
       isGenerated: false
     }
   }
+
   onSubmit(event) {
     event.preventDefault()
     console.log('complete', this.state.password)
@@ -24,6 +28,7 @@ export class AddWallet extends Component {
 
     let seedPhrase = ""
     let password = this.state.password
+    let ks = {}
     seedPhrase = lightwallet.keystore.generateRandomSeed(password);
     console.log(seedPhrase)
     const opt = {
@@ -33,7 +38,14 @@ export class AddWallet extends Component {
     };
     lightwallet.keystore.createVault(opt, (err, data) => {
       console.log('createVault')
-      console.log(data)
+      ks = data
+      console.log(ks)
+      const walletdump = {
+        ver: '1',
+        ks: ks.serialize(),
+      }
+      console.log(walletdump)
+      localStore.set(localStorageKey, walletdump)
     })
   }
 
@@ -47,6 +59,7 @@ export class AddWallet extends Component {
         return (
             <div>
             <table>
+            <tbody>
             <tr>
             <td>&nbsp;</td>
             <td>
@@ -54,13 +67,14 @@ export class AddWallet extends Component {
                 <label for="pass">  Key in your password for the new wallet<br/>
                  (4 characters minimum):</label><br/>
                 <input type="password" id="pass" name="password"
-                  minlength="4" required onChange={evt => this.updatePass(evt)}>
+                  minLength="4" required onChange={evt => this.updatePass(evt)}>
                 </input>
                 <button className='button-submit'
                 onClick={evt => this.onSubmit(evt)}>Generate</button>
             </form>
             </td>
             </tr>
+            </tbody>
             </table>
             {this.state.isGenerated?'New Wallet is generated':''}<br/>
             </div>
@@ -69,9 +83,7 @@ export class AddWallet extends Component {
 }
 
 const mapStateToProps = state => ({
-
-        username: state.reducers.username,
-
+    username: state.reducers.username,
 })
 
 export default connect(mapStateToProps)(AddWallet)
