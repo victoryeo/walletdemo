@@ -35,9 +35,20 @@ export async function checkNetwork(web3) {
             return 'local';
         }
       })
-      
+
   } catch (err) {
     console.warn('web3 provider not open');
     return "none";
+  }
+}
+
+export function checkKeystore(ks, STPupdateKeystore) {
+  try {
+      console.log(ks)
+      STPupdateKeystore(ks)
+  } catch (err) {
+    console.log(err)
+    console.warn('keystore not open');
+    return err;
   }
 }
