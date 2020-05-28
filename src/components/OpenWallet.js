@@ -5,6 +5,10 @@ import Button from 'react-bootstrap/Button'
 import lightwallet from 'eth-lightwallet'
 import localStore from 'store/dist/store.modern'
 import { hdPathString, localStorageKey } from '../web3/constants'
+import * as Utils from '../web3/utils'
+import { STPupdateAccounts, STPupdateKeystore } from '../actions/actions.js'
+import { compose } from 'redux'
+import { withRouter } from 'react-router-dom';
 
 export class OpenWallet extends Component {
   constructor(props) {
@@ -13,6 +17,7 @@ export class OpenWallet extends Component {
       password: '',
       isLoaded: false
     }
+    console.log(this.props)
   }
 
   onSubmit(event) {
@@ -31,6 +36,8 @@ export class OpenWallet extends Component {
     const ksDump = walletdump.ks;
     const ks = lightwallet.keystore.deserialize(ksDump);
     console.log(ks)
+    console.log(this.props)
+    //Utils.checkKeystore(ks, this.props.STPupdateKeystore)
   }
 
   updatePass(event) {
@@ -38,6 +45,11 @@ export class OpenWallet extends Component {
       password: event.target.value
     })
     console.log('updatePass', this.state.password)
+  }
+  goBack(event){
+    event.preventDefault()
+      //console.log(this.props)
+      this.props.history.goBack();
   }
     render() {
         return (
@@ -61,6 +73,7 @@ export class OpenWallet extends Component {
             </tbody>
             </table>
             {this.state.isLoaded?'Wallet is loaded':''}<br/>
+            <button onClick={evt => this.goBack(evt)}>Go Back</button>
             </div>
         );
     }
@@ -68,6 +81,17 @@ export class OpenWallet extends Component {
 
 const mapStateToProps = state => ({
     username: state.reducers.username,
+    keystore: state.reducers.keystore,
 })
 
-export default connect(mapStateToProps)(OpenWallet)
+
+export default
+  withRouter(
+  connect(
+    mapStateToProps,
+    {
+      STPupdateAccounts,
+      STPupdateKeystore,
+    }
+  )
+)(OpenWallet)
