@@ -16,6 +16,7 @@ class Web3Info extends Component {
     //this.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
     console.log("App web3")
+    console.log(this.props)
     const web3Returned = setInterval(() => {
       if (this.props.web3 != null) {
 	      clearInterval(web3Returned);
@@ -57,6 +58,7 @@ class Web3Info extends Component {
           {this.state.isConnected?'Connected to local node':'Not Connected'}<br/>
           Account is {this.props.account}<br/>
           Balance is {this.props.totalBalance}<br/>
+          Wallet {this.props.keystore?' loaded':' not loaded'}<br/>
           </div>
         );
     }
@@ -65,7 +67,8 @@ class Web3Info extends Component {
 const mapStateToProps = state => ({
         web3: state.web3,
         totalBalance: state.reducers.totalBalance,
-        account: state.reducers.account
+        account: state.reducers.account,
+        keystore: state.reducers.keystore,
 })
 
 export default connect(
