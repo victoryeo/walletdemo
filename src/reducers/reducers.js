@@ -2,6 +2,7 @@ export const initialState = {
   username: 'user',
   totalBalance : 0.0,
   account: '0x0',
+  keystore: false,
 }
 
 export const reducers = (state = initialState, action) => {
@@ -13,11 +14,19 @@ export const reducers = (state = initialState, action) => {
         ...state,
         account: action.payload,
       };
+      break;
     case 'UPDATE_TOTAL_BALANCE':
       return {
         ...state,
         totalBalance: action.payload,
       };
+      break;
+    case 'UPDATE_KEYSTORE':
+      return {
+        ...state,
+        keystore: action.payload,
+      }
+      break;
     case 'UPDATE_USERNAME':
       val = {
         ...state,
