@@ -58,7 +58,41 @@ class Web3Info extends Component {
           {this.state.isConnected?'Connected to local node':'Not Connected'}<br/>
           Account is {this.props.account}<br/>
           Balance is {this.props.totalBalance}<br/>
-          Wallet {this.props.keystore?' loaded':' not loaded'}<br/>
+          {this.props.keystore
+          ?
+          <div>
+          <br/>
+          <label>Wallet loaded </label>
+          <table>
+          <tbody>
+          <tr>
+          <td>&nbsp;</td>
+          <td>
+          <form onSubmit={this.transaction}>
+              <label>  Destination address
+              </label>
+              <input type="destination" id="destination" name="destination"
+                required>
+              </input><br/>
+              <label>  Amount
+              </label>
+              <input type="amount" id="amount" name="amount"
+                required>
+              </input><br/>
+              <label>  Gas Price (Gwei)
+              </label>
+              <input type="gas" id="gas" name="gas"
+                required>
+              </input><br/>
+              <button className='button-submit'
+              onClick={evt => this.onSubmit(evt)}>Send</button>
+          </form>
+          </td>
+          </tr>
+          </tbody>
+          </table>
+          </div>
+          :'Wallet not loaded'}<br/>
           </div>
         );
     }
