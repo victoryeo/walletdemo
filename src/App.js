@@ -14,7 +14,7 @@ getWeb3.catch(
   err => console.warn('Error in web3 initialization.', err)
 )
 
-export class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,4 +48,5 @@ export class App extends Component {
   }
 }
 
+export default connect(null)(App);
 //export default App;
