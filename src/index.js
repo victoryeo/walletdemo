@@ -4,12 +4,13 @@ import { Provider } from 'react-redux'
 import './index.css'
 import Routes from "./routes"
 import { Router } from "react-router-dom"
-import createHistory from 'history/createBrowserHistory'
+//import createHistory from 'history/createBrowserHistory'
+import { createBrowserHistory } from 'history'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { FirstStore } from './store/FirstStore'
 
-const history = createHistory()
+const history = createBrowserHistory()
 
 ReactDOM.render(
   <Router history={history}>
