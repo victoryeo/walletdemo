@@ -1,7 +1,7 @@
 export const initialState = {
-  username: 'seasea',
+  username: 'user',
   totalBalance : 0.0,
-  account: '0x0',	
+  account: '0x0',
 }
 
 export const reducers = (state = initialState, action) => {
