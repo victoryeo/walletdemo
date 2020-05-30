@@ -9,6 +9,7 @@ import * as Utils from '../web3/utils'
 import { STPupdateAccounts, STPupdateKeystore } from '../actions/actions.js'
 import { compose } from 'redux'
 import { withRouter } from 'react-router-dom';
+//import { call, put, select, takeLatest } from 'redux-saga/effects';
 
 export class OpenWallet extends Component {
   constructor(props) {
@@ -25,23 +26,57 @@ export class OpenWallet extends Component {
 
   onLoad(event) {
     event.preventDefault()
-    console.log('complete', this.state.password)
-    this.setState({
-      isLoaded: true
-    })
 
-    const walletdump = localStore.get(localStorageKey);
+    const keyFromPasswordPromise = (param) => {
+      return new Promise((resolve, reject) => {
+       ks.keyFromPassword(param, (err, data) => {
+         if (err !== null) {
+           console.log(err)
+           return resolve(false)
+         }
+         console.log(data)
+         const pwDerivedKey = data
+         const isPasswordCorrect = ks.isDerivedKeyCorrect(pwDerivedKey)
+         if (!isPasswordCorrect) {
+           console.log('Invalid Password')
+           return resolve(false)
+         }
+         else {
+           console.log('Valid Password')
+           this.setState({
+             isLoaded: true
+           })
+           return resolve(true)
+         }
+       });
+     });
+    }
+
+    let walletdump = localStore.get(localStorageKey);
     if (!walletdump) {
       throw new Error('No keystore found in localStorage');
     }
     console.log(`Load len: ${JSON.stringify(walletdump).length}`);
 
-    const ksDump = walletdump.ks;
-    const ks = lightwallet.keystore.deserialize(ksDump);
+    //const ksDump = walletdump.ks;
+    let ks = lightwallet.keystore.deserialize(walletdump.ks);
     console.log(ks)
-    console.log(this.props)
-    //this.props.location.name contains the cb function
-    Utils.checkKeystore(true, this.props.location.name)
+
+    try {
+      keyFromPasswordPromise(this.state.password).then(res => {
+        if (res == false) {
+          console.log(res)
+          //if password not matched, reset the wallet content
+          walletdump = null
+          ks = null
+        }
+        else
+          //this.props.location.name contains the cb function
+          Utils.checkKeystore(true, this.props.location.name)
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   onSendEther(event) {
@@ -56,8 +91,8 @@ export class OpenWallet extends Component {
       gas: this.state.gas
     }
     let web3 =  this.props.location.web3.web3Instance
-    let transferEth
-    transferEth = async() => {
+
+    const transferEth = async() => {
       console.log('transfer eth')
       try {
         const resp = await web3.eth.sendTransaction(txObj)
@@ -66,6 +101,17 @@ export class OpenWallet extends Component {
       }
     }
     transferEth()
+
+    const sendTransactionPromise = (params) => {
+      let web3 =  this.props.location.web3.web3Instance
+      return new Promise((resolve, reject) => {
+            web3.eth.sendTransaction(params, (err, data) => {
+              if (err !== null) return reject(err);
+              return resolve(data);
+            });
+      });
+    }
+    sendTransactionPromise(txObj)
   }
 
   updatePass(event) {
