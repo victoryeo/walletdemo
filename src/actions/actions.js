@@ -1,4 +1,4 @@
-import Web3 from 'web3'
+//import Web3 from 'web3'
 
 const actionTypes = {
 	UPDATE_TOTAL_BALANCE: 'UPDATE_TOTAL_BALANCE',
@@ -6,7 +6,7 @@ const actionTypes = {
 	UPDATE_KEYSTORE: 'UPDATE_KEYSTORE',
 }
 
-const web3 = new Web3('http://localhost:7545');
+//const web3 = new Web3('http://localhost:7545');
 
 export const STPupdateTotalBalance = balance => dispatch => {
   dispatch({
