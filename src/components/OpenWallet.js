@@ -20,7 +20,7 @@ export class OpenWallet extends Component {
     console.log(this.props)
   }
 
-  onSubmit(event) {
+  onLoad(event) {
     event.preventDefault()
     console.log('complete', this.state.password)
     this.setState({
@@ -41,6 +41,11 @@ export class OpenWallet extends Component {
     Utils.checkKeystore(true, this.props.location.name)
   }
 
+  onSendEther(event) {
+    event.preventDefault()
+    console.log('SendEther', this.state.password)
+  }
+
   updatePass(event) {
     this.setState({
       password: event.target.value
@@ -59,7 +64,7 @@ export class OpenWallet extends Component {
     const { match } = this.props
     console.log(match)
   }
-  
+
     render() {
         return (
             <div>
@@ -68,14 +73,14 @@ export class OpenWallet extends Component {
             <tr>
             <td>&nbsp;</td>
             <td>
-            <form onSubmit>
+            <form>
                 <label for="pass">  Key in your password to load existing wallet<br/>
                  (4 characters minimum):</label><br/>
                 <input type="password" id="pass" name="password"
                   minLength="4" required onChange={evt => this.updatePass(evt)}>
                 </input>
                 <button className='button-submit'
-                onClick={evt => this.onSubmit(evt)}>Load</button>
+                onClick={evt => this.onLoad(evt)}>Load</button>
             </form>
             </td>
             </tr>
@@ -97,7 +102,7 @@ export class OpenWallet extends Component {
               <tr>
               <td>&nbsp;</td>
               <td>
-              <form onSubmit>
+              <form>
                   <label className="walletlabel"> Destination address:
                   <input className="walletinput" type="text" id="destination"
                     required>
@@ -111,7 +116,7 @@ export class OpenWallet extends Component {
                      required>
                   </input></label><br/>
                   <button className='button-submit'
-                  onClick={evt => this.onSubmit(evt)}>Send Ether</button>
+                  onClick={evt => this.onSendEther(evt)}>Send Ether</button>
               </form>
               </td>
               </tr>
