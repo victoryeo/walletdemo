@@ -24,6 +24,8 @@ class AddWalletButton extends Component {
     this.props.history.push({
            pathname: '/openwallet',
            name: this.props.STPupdateKeystore,
+           web3: this.props.web3,
+           account: this.props.account,
        })
     //this.props.STPupdateKeystore(true)
   }
@@ -46,7 +48,9 @@ class AddWalletButton extends Component {
 }
 
 const mapStateToProps = state => ({
+    web3: state.web3,
     username: state.reducers.username,
+    account: state.reducers.account,
     keystore: state.reducers.keystore,
 })
 
