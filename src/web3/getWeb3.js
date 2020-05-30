@@ -1,7 +1,8 @@
-import Web3 from 'web3';
-import { FirstStore } from '../store/FirstStore';
+import Web3 from 'web3'
+import { FirstStore } from '../store/FirstStore'
+import { ganachehost } from './constants'
 
-export const WEB3_INITIALIZED = 'WEB3_INITIALIZED';
+export const WEB3_INITIALIZED = 'WEB3_INITIALIZED'
 
 function web3Initialized(results) {
   return {
@@ -27,7 +28,7 @@ const getWeb3 = new Promise(resolve => {
     } else {
       // Fallback to localhost if no web3 injection. We've configured this to
       // use the development console's port by default.
-      web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'))
+      web3 = new Web3(new Web3.providers.HttpProvider(ganachehost))
       results = {
         web3Instance: web3,
       }
@@ -37,4 +38,3 @@ const getWeb3 = new Promise(resolve => {
 })
 
 export default getWeb3;
-
