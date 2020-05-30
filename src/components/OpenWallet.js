@@ -47,6 +47,7 @@ export class OpenWallet extends Component {
     })
     console.log('updatePass', this.state.password)
   }
+
   goBack(event){
     event.preventDefault()
       //console.log(this.props)
@@ -58,6 +59,7 @@ export class OpenWallet extends Component {
     const { match } = this.props
     console.log(match)
   }
+  
     render() {
         return (
             <div>
@@ -66,7 +68,7 @@ export class OpenWallet extends Component {
             <tr>
             <td>&nbsp;</td>
             <td>
-            <form onSubmit={this.transaction}>
+            <form onSubmit>
                 <label for="pass">  Key in your password to load existing wallet<br/>
                  (4 characters minimum):</label><br/>
                 <input type="password" id="pass" name="password"
@@ -79,8 +81,48 @@ export class OpenWallet extends Component {
             </tr>
             </tbody>
             </table>
-            {this.state.isLoaded?'Wallet is loaded':''}<br/>
-            <button onClick={evt => this.goBack(evt)}>Go Back</button>
+            {this.state.isLoaded
+              ?
+              <div>
+              <br/>
+              <table>
+              <tbody>
+              <tr>
+              <td>&nbsp;</td>
+              <td>Wallet is loaded</td>
+              </tr>
+              <tr>
+              <td>&nbsp;</td>
+              </tr>
+              <tr>
+              <td>&nbsp;</td>
+              <td>
+              <form onSubmit>
+                  <label className="walletlabel"> Destination address:
+                  <input className="walletinput" type="text" id="destination"
+                    required>
+                  </input></label><br/>
+                  <label className="walletlabel"> Amount:
+                  <input className="walletinput" type="text" id="amount"
+                     required>
+                  </input></label><br/>
+                  <label className="walletlabel"> Gas Price (Gwei):
+                  <input className="walletinput" type="text" id="gas"
+                     required>
+                  </input></label><br/>
+                  <button className='button-submit'
+                  onClick={evt => this.onSubmit(evt)}>Send Ether</button>
+              </form>
+              </td>
+              </tr>
+              <tr>
+              <td>&nbsp;</td>
+              <td><button onClick={evt => this.goBack(evt)}>Go Back</button></td>
+              </tr>
+              </tbody>
+              </table>
+              </div>
+              :''}<br/>
             </div>
         );
     }
