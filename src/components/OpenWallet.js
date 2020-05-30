@@ -15,7 +15,10 @@ export class OpenWallet extends Component {
     super(props)
     this.state = {
       password: '',
-      isLoaded: false
+      isLoaded: false,
+      destination: 0x0,
+      amount: 0,
+      gas: 0,
     }
     console.log(this.props)
   }
@@ -43,14 +46,50 @@ export class OpenWallet extends Component {
 
   onSendEther(event) {
     event.preventDefault()
-    console.log('SendEther', this.state.password)
+    console.log('SendEther', this.state.destination, this.state.amount,
+      this.state.gas)
+
+    let txObj = {
+      from: this.props.location.account,
+      to: this.state.destination,
+      value: this.state.amount,
+      gas: this.state.gas
+    }
+    let web3 =  this.props.location.web3.web3Instance
+    let transferEth
+    transferEth = async() => {
+      console.log('transfer eth')
+      try {
+        const resp = await web3.eth.sendTransaction(txObj)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    transferEth()
   }
 
   updatePass(event) {
     this.setState({
       password: event.target.value
     })
-    console.log('updatePass', this.state.password)
+  }
+
+  updateDest(event) {
+    this.setState({
+      destination: event.target.value
+    })
+  }
+
+  updateGas(event) {
+    this.setState({
+      gas: event.target.value
+    })
+  }
+
+  updateAmount(event) {
+    this.setState({
+      amount: event.target.value
+    })
   }
 
   goBack(event){
@@ -61,6 +100,8 @@ export class OpenWallet extends Component {
 
   componentDidMount() {
     console.log(this.props.location.name)
+    console.log(this.props.location.account)
+    console.log(this.props.location.web3)
     const { match } = this.props
     console.log(match)
   }
@@ -68,24 +109,6 @@ export class OpenWallet extends Component {
     render() {
         return (
             <div>
-            <table>
-            <tbody>
-            <tr>
-            <td>&nbsp;</td>
-            <td>
-            <form>
-                <label for="pass">  Key in your password to load existing wallet<br/>
-                 (4 characters minimum):</label><br/>
-                <input type="password" id="pass" name="password"
-                  minLength="4" required onChange={evt => this.updatePass(evt)}>
-                </input>
-                <button className='button-submit'
-                onClick={evt => this.onLoad(evt)}>Load</button>
-            </form>
-            </td>
-            </tr>
-            </tbody>
-            </table>
             {this.state.isLoaded
               ?
               <div>
@@ -105,29 +128,52 @@ export class OpenWallet extends Component {
               <form>
                   <label className="walletlabel"> Destination address:
                   <input className="walletinput" type="text" id="destination"
-                    required>
+                    required onChange={evt => this.updateDest(evt)}>
                   </input></label><br/>
                   <label className="walletlabel"> Amount:
                   <input className="walletinput" type="text" id="amount"
-                     required>
+                     required onChange={evt => this.updateAmount(evt)}>
                   </input></label><br/>
                   <label className="walletlabel"> Gas Price (Gwei):
                   <input className="walletinput" type="text" id="gas"
-                     required>
+                     required onChange={evt => this.updateGas(evt)}>
                   </input></label><br/>
                   <button className='button-submit'
                   onClick={evt => this.onSendEther(evt)}>Send Ether</button>
               </form>
               </td>
               </tr>
-              <tr>
-              <td>&nbsp;</td>
-              <td><button onClick={evt => this.goBack(evt)}>Go Back</button></td>
-              </tr>
               </tbody>
               </table>
               </div>
-              :''}<br/>
+              :
+              <table>
+              <tbody>
+              <tr>
+              <td>&nbsp;</td>
+              <td>
+              <form>
+                  <label for="pass">  Key in your password to load existing wallet<br/>
+                   (4 characters minimum):</label><br/>
+                  <input type="password" id="pass" name="password"
+                    minLength="4" required onChange={evt => this.updatePass(evt)}>
+                  </input>
+                  <button className='button-submit'
+                  onClick={evt => this.onLoad(evt)}>Load</button>
+              </form>
+              </td>
+              </tr>
+              </tbody>
+              </table>
+            }<br/>
+            <table>
+            <tbody>
+            <tr>
+            <td>&nbsp;</td>
+            <td><button onClick={evt => this.goBack(evt)}>Go Back</button></td>
+            </tr>
+            </tbody>
+            </table>
             </div>
         );
     }
