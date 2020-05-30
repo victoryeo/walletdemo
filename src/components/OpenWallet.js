@@ -4,11 +4,12 @@ import Button from 'react-bootstrap/Button'
 //import keyStore from  '../containers/keystore'
 import lightwallet from 'eth-lightwallet'
 import localStore from 'store/dist/store.modern'
-import { hdPathString, localStorageKey } from '../web3/constants'
+import { hdPathString, localStorageKey, Ether, Gwei } from '../web3/constants'
 import * as Utils from '../web3/utils'
 import { STPupdateAccounts, STPupdateKeystore } from '../actions/actions.js'
 import { compose } from 'redux'
 import { withRouter } from 'react-router-dom';
+import BigNumber from 'bignumber.js';
 //import { call, put, select, takeLatest } from 'redux-saga/effects';
 
 export class OpenWallet extends Component {
@@ -87,31 +88,36 @@ export class OpenWallet extends Component {
     let txObj = {
       from: this.props.location.account,
       to: this.state.destination,
-      value: this.state.amount,
-      gas: this.state.gas
+      value: new BigNumber(this.state.amount).times(Ether),
+      //gas: new BigNumber(this.state.gas).times(Gwei)
     }
     let web3 =  this.props.location.web3.web3Instance
+    console.log('SendEther', txObj)
 
     const transferEth = async() => {
       console.log('transfer eth')
       try {
         const resp = await web3.eth.sendTransaction(txObj)
+        console.log(resp)
       } catch (err) {
         console.log(err)
       }
     }
     transferEth()
 
-    const sendTransactionPromise = (params) => {
+    /*const sendTransactionPromise = (params) => {
       let web3 =  this.props.location.web3.web3Instance
       return new Promise((resolve, reject) => {
             web3.eth.sendTransaction(params, (err, data) => {
-              if (err !== null) return reject(err);
+              if (err !== null)
+                return reject(err);
               return resolve(data);
             });
       });
     }
-    sendTransactionPromise(txObj)
+    sendTransactionPromise(txObj).then(data => {
+      console.log(data)
+    })*/
   }
 
   updatePass(event) {
